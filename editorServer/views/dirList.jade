@@ -1,0 +1,45 @@
+extends layout
+
+block content
+  h1= title
+  p Welcome to #{resourece.name}
+
+  script.
+    var p;
+    function foledrClick(e){
+      if(e.getAttribute("class").indexOf("open") < 0){//folder not open
+        e.setAttribute("class","fa fa-folder-open");
+        var parent = e.parentElement;
+        var children = Array.from(parent.children);
+        children.shift();
+        for(child of children){
+          child.style.display="none";
+        }
+      }else {
+        e.setAttribute("class","fa fa-folder");
+        var parent = e.parentElement;
+        var children = Array.from(parent.children);
+        children.shift();
+        for(child of children){
+          child.style.display="block";
+        }
+      }
+    }
+    function fileClick(e){
+      window.location.pathname=e.getAttribute("path").replace("..","\/dir")
+    }
+  mixin listItem(folder)
+    each item in folder.children
+      if item.children === undefined
+        li
+          div(class="fa fa-file" aria-hidden="true" onclick='fileClick(this)' path=item.path) #{item.name}
+      else
+        ol
+          div(class="fa fa-folder" aria-hidden="true" onclick='foledrClick(this)' path=item.path) #{item.name}
+          +listItem(item)
+  ol(class="fa fa-folder-open" aria-hidden="true" style="margin-left:0px;") #{resourece.name}
+    +listItem(resourece)
+    
+  pre #{fileContent}
+
+

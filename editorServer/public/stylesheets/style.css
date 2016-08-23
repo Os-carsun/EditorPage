@@ -1,0 +1,20 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+li, ol {
+	list-style: none;
+	display: block;
+	list-style-position:inside;
+	margin:0;
+    padding:0;
+    display: block;
+	margin-top: 5px;
+	margin-left: 5px;
+}
+a {
+  color: #00B7FF;
+}
+div.fa:hover{
+	color:red;
+}
