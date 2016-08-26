@@ -15,6 +15,26 @@ li, ol {
 a {
   color: #00B7FF;
 }
-div.fa:hover{
+
+div.fa:hover {
 	color:red;
+}
+
+div#container {
+	display: flex;
+}
+
+div#directoryTree {
+	display: inline-block;
+	width: 15%;
+	height: 600px;
+}
+div#editor {
+
+	display: inline-block;
+	width: 80%;
+}
+
+body {
+	background-color: #ccc;
 }

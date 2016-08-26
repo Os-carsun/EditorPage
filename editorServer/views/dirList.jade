@@ -2,10 +2,9 @@ extends layout
 
 block content
   h1= title
-  p Welcome to #{resourece.name}
+  p now edit #{resourece.name}
 
   script.
-    var p;
     function foledrClick(e){
       if(e.getAttribute("class").indexOf("open") < 0){//folder not open
         e.setAttribute("class","fa fa-folder-open");
@@ -28,18 +27,58 @@ block content
     function fileClick(e){
       window.location.pathname=e.getAttribute("path").replace("..","\/dir")
     }
-  mixin listItem(folder)
-    each item in folder.children
-      if item.children === undefined
-        li
-          div(class="fa fa-file" aria-hidden="true" onclick='fileClick(this)' path=item.path) #{item.name}
-      else
-        ol
-          div(class="fa fa-folder" aria-hidden="true" onclick='foledrClick(this)' path=item.path) #{item.name}
-          +listItem(item)
-  ol(class="fa fa-folder-open" aria-hidden="true" style="margin-left:0px;") #{resourece.name}
-    +listItem(resourece)
-    
-  pre #{fileContent}
+  div#container
+    div#directoryTree
+      mixin listItem(folder)
+        each item in folder.children
+          if item.children === undefined
+            li
+              div(class="fa fa-file" aria-hidden="true" onclick='fileClick(this)' path=item.path) #{item.name}
+          else
+            ol
+              div(class="fa fa-folder" aria-hidden="true" onclick='foledrClick(this)' path=item.path) #{item.name}
+              +listItem(item)
+      ol(class="fa fa-folder-open" aria-hidden="true" style="margin-left:0px;") #{resourece.name}
+        +listItem(resourece)   
+    div#editor
+      pre#editorContain #{fileContent}
 
+  script(src='/javascripts/codemirror-compressed.js')
+  script(src='/javascripts/javascript.js')
+
+  script.
+    var editor = document.getElementById('editorContain')
+    var myCodeMirror = CodeMirror(function(elt) {
+      editor.parentNode.replaceChild(elt, editor);
+    },{
+      value: editor.textContent,
+      lineNumbers: true,
+      tabSize: 2,
+      mode: "javascript"
+    });
+
+    myCodeMirror.setOption("extraKeys", {
+      "Cmd-S": function(cm) {
+        fetch(".",{
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          method: "POST",
+          body: `text=${myCodeMirror.getValue()}&name=#{title}`,
+        })
+      },
+      "Ctrl-S": function(cm) {
+        fetch(".",{
+          headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/x-www-form-urlencoded'
+          },
+          method: "POST",
+          body: `text=${myCodeMirror.getValue()}&name=#{title}`,
+        })
+      },
+    });
+
+ 
 
